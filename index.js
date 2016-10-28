@@ -35,7 +35,7 @@ var safeCompare = function safeCompare(a, b) {
 // Node.JS v7 now implements a timing safe compare method. Return that if the user is running the latest Node.js version.
 module.exports = (crypto.timingSafeEqual !== 'undefined' ? crypto.timingSafeEqual : safeCompare);
 module.exports = function (a, b) {
-    if (crypto.timingSafeEqual !== 'undefined') {
+    if (typeof crypto.timingSafeEqual !== 'undefined') {
         var strA = String(a);
         var strB = String(b);
         
@@ -43,8 +43,8 @@ module.exports = function (a, b) {
         var bufA = crypto.createHmac('sha256', key).update(strA).digest();
         var bufB = crypto.createHmac('sha256', key).update(strB).digest();
         
-        return crypto.timingSafeEqual.call(crypto.timingSafeEqual, bufA, bufB);
+        return crypto.timingSafeEqual.call(null, bufA, bufB);
     } else {
-        return safeCompare;
+        return safeCompare.call(null, a, b);
     }
 };
